@@ -1,33 +1,23 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const FilterButtons = ({ onSelectFilter }) => {
+const FilterButton = ({ label, onSelectFilter }) => {
   return (
-    <View style={styles.filterContainer}>
-      <TouchableOpacity onPress={() => onSelectFilter('Playground')}>
-        <Text style={styles.filterButton}>Playground</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => onSelectFilter('Museum')}>
-        <Text style={styles.filterButton}>Museum</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => onSelectFilter('Sports')}>
-        <Text style={styles.filterButton}>Sports</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={() => onSelectFilter(label)}>
+      <Text style={styles.filterButton}>{label}</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-  },
   filterButton: {
     padding: 10,
+    marginHorizontal: 5,
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
+    minWidth: 100,
+    textAlign: 'center',
   },
 });
 
-export default FilterButtons;
+export default FilterButton;

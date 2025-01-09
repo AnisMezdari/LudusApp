@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
-const SearchBar = ({ value, onChange }) => {
+const SearchBar = ({ value, onChangeText }) => {
   return (
     <View style={styles.container}>
       <TextInput
         placeholder="Rechercher une activité..."
         value={value}
-        onChangeText={onChange}
+        onChangeText={onChangeText}
         style={styles.input}
       />
     </View>
