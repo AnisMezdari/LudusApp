@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 const ActivityCard = ({ activity, onFavoriteToggle }) => {
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{activity.title}</Text> {/* Titre en haut */}
+      <Text style={styles.title}>{activity.title}</Text>
       <View style={styles.cardContent}>
         <Image source={activity.image} style={styles.image} />
         <View style={styles.textContainer}>

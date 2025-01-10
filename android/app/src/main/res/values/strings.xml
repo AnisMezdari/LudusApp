@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">LudusApp</string>
+    <string name="app_name">Ludus</string>
+     <string name="google_maps_api_key">AIzaSyBiunGwd3YBtiV6PgkCSL1tacUQDcANJ3E</string>
 </resources>
