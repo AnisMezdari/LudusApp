@@ -1,4 +1,12 @@
 {
   "name": "LudusApp",
-  "displayName": "LudusApp"
+  "displayName": "Ludus",
+  "platforms": ["ios", "android"],
+  "android": {
+    "config": {
+      "googleMaps": {
+        "apiKey": "@GOOGLE_MAPS_API_KEY"
+      }
+    }
+  }
 }

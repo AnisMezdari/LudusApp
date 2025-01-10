@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import activities from '../data/Activities';
 import SearchBar from '../components/SearchBar';
 import ActivityCard from '../components/ActivityCard';
 import FilterButton from '../components/FilterButtons';
+import HeaderBackground from '../components/HeaderBackground';
+import {REACT_APP_GOOGLE_MAPS_API_KEY} from '@env'
 
 const SearchActivity = () => {
+  console.log("REACT_APP_GOOGLE_MAPS_API_KEY : " + REACT_APP_GOOGLE_MAPS_API_KEY);  // Vérifie si ta clé API est bien récupérée
+  //console.log(GOOGLE_MAPS_API_KEY);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('All');
@@ -40,20 +43,16 @@ const SearchActivity = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header avec le dégradé */}
-      <LinearGradient
-        colors={[
-          'rgba(255, 204, 204, 0.6)', // Rose pâle
-          'rgba(204, 229, 255, 0.6)', // Bleu clair
-          'rgba(204, 255, 229, 0.6)', // Vert clair
-        ]}
-        style={styles.header}
-      >
-        <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
-        <Text style={styles.headerText}>Recherche</Text>
-      </LinearGradient>
+      <View style={styles.header}>
+        <HeaderBackground />
+        <View style={styles.headerContent}>
+          <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          <Text style={styles.headerText}>Recherche</Text>
+        </View>
+      </View>
 
       <SearchBar value={searchTerm} onChangeText={handleSearch} />
+
       <View style={styles.filterContainer}>
         <ScrollView
           horizontal
@@ -68,6 +67,7 @@ const SearchActivity = () => {
           <FilterButton label="Sports" onSelectFilter={handleFilter} />
         </ScrollView>
       </View>
+
       <ScrollView>
         {filteredActivities && filteredActivities.length > 0 ? (
           filteredActivities.map((activity) => (
@@ -87,24 +87,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    flexDirection: 'row',
+    height: 150,
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    position: 'relative',
+  },
+  headerContent: {
+    position: 'absolute',
+    alignItems: 'center',
   },
   logo: {
-    width: 75,
-    height: 75,
-    marginRight: 10,
+    width: 120,
+    height: 120,
+    marginBottom: -10,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: 'bold',
     color: '#333',
   },
   filterContainer: {
     marginBottom: 15,
+  },
+  mapContainer: {
+    height: 300,
+    marginBottom: 20,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
   },
   filterScrollView: {
     flexDirection: 'row',
