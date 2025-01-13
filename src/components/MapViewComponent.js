@@ -6,34 +6,7 @@ import Geolocation from 'react-native-geolocation-service';
 const MapViewComponent = ({ markers }) => {
   const [location, setLocation] = useState(null);
 
-  useEffect(() => {
-    // Demander la géolocalisation lorsque le composant est monté
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      },
-      (error) => {
-        console.log(error);
-        // Tu peux définir une position par défaut si l'utilisateur refuse la géolocalisation
-        setLocation({
-          latitude: 48.8566, // Paris
-          longitude: 2.3522, // Paris
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  }, []);
 
-  if (!location) {
-    return <View style={styles.mapContainer}><Text>Loading...</Text></View>;
-  }
 
   return (
     <View style={styles.mapContainer}>

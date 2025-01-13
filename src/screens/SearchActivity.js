@@ -73,8 +73,8 @@ const SearchActivity = () => {
         location={{
           latitude: 48.8566, // Exemple : Paris comme position par défaut
           longitude: 2.3522,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.1,
+          latitudeDelta: 0.00422,
+          longitudeDelta: 0.00621,
         }}
         markers={filteredActivities.map((activity) => ({
           latitude: activity.location.latitude,
