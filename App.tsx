@@ -1,7 +1,65 @@
 import React, { useEffect } from 'react';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions'; // Gestion des permissions
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './src/navigation/AppNavigator';
-import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';  // Importation des permissions
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import SearchActivity from './src/screens/SearchActivity';
+import LoginScreen from './src/screens/LoginScreen';
+
+// Écrans des onglets
+const ExploreScreen = () => (
+  <View style={styles.screen}>
+    <Text>Explore Page</Text>
+  </View>
+);
+
+const CalendarScreen = () => (
+  <View style={styles.screen}>
+    <Text>Calendar Page</Text>
+  </View>
+);
+
+
+// Création des onglets
+const Tab = createBottomTabNavigator();
+
+const AppNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          switch (route.name) {
+            case 'Explore':
+              iconName = 'compass-outline';
+              break;
+            case 'Search':
+              iconName = 'search-outline';
+              break;
+            case 'Calendar':
+              iconName = 'calendar-outline';
+              break;
+            case 'Account':
+              iconName = 'person-outline';
+              break;
+            default:
+              iconName = 'ellipse-outline';
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#6200EE',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="Explore" component={ExploreScreen} />
+      <Tab.Screen name="Search" component={SearchActivity} />
+      <Tab.Screen name="Calendar" component={CalendarScreen} />
+      <Tab.Screen name="Account" component={LoginScreen} />
+    </Tab.Navigator>
+  );
+};
 
 const App = () => {
   useEffect(() => {
@@ -30,3 +88,11 @@ const App = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

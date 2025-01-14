@@ -7,7 +7,7 @@ const activities = [
     favorite: false,
     package: '1',
     location: { latitude: 48.7639, longitude: 2.3755 },
-    image: require('../../assets/images/guillipark-thiais.jpg'),
+    image: require('../../assets/images/Activity/guillipark-thiais.jpg'),
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ const activities = [
     favorite: true,
     package: '3',
     location: { latitude: 48.8566, longitude: 2.3522 },
-    image: require('../../assets/images/spa.jpg'),
+    image: require('../../assets/images/Activity/spa.jpg'),
   },
   {
     id: '3',
@@ -27,7 +27,7 @@ const activities = [
     favorite: false,
     package: '1',
     location: { latitude: 48.7200, longitude: 2.3000 },
-    image: require('../../assets/images/funland.jpg'),
+    image: require('../../assets/images/Activity/funland.jpg'),
   },
   {
     id: '4',
@@ -37,7 +37,7 @@ const activities = [
     favorite: false,
     package: '2',
     location: { latitude: 48.9100, longitude: 2.2600 },
-    image: require('../../assets/images/aquaparkkids.png'),
+    image: require('../../assets/images/Activity/aquaparkkids.png'),
   },
   {
     id: '5',
@@ -47,7 +47,7 @@ const activities = [
     favorite: true,
     package: '2',
     location: { latitude: 48.8700, longitude: 2.3200 },
-    image: require('../../assets/images/LePetitZoo.jpg'),
+    image: require('../../assets/images/Activity/LePetitZoo.jpg'),
   },
   {
     id: '6',
@@ -57,7 +57,7 @@ const activities = [
     favorite: false,
     package: '3',
     location: { latitude: 48.8500, longitude: 2.3000 },
-    image: require('../../assets/images/bubleSpa.jpg'),
+    image: require('../../assets/images/Activity/bubleSpa.jpg'),
   },
   {
     id: '7',
@@ -67,7 +67,7 @@ const activities = [
     favorite: false,
     package: '1',
     location: { latitude: 48.9500, longitude: 2.2500 },
-    image: require('../../assets/images/JungleGym.jpg'),
+    image: require('../../assets/images/Activity/JungleGym.jpg'),
   },
   {
     id: '8',
@@ -77,7 +77,7 @@ const activities = [
     favorite: false,
     package: '4',
     location: { latitude: 48.8200, longitude: 2.4000 },
-    image: require('../../assets/images/PlanetariumParis.jpg'),
+    image: require('../../assets/images/Activity/PlanetariumParis.jpg'),
   },
   {
     id: '9',
@@ -87,7 +87,7 @@ const activities = [
     favorite: true,
     package: '4',
     location: { latitude: 48.7800, longitude: 2.3700 },
-    image: require('../../assets/images/ArtisticWorkshop.webp'),
+    image: require('../../assets/images/Activity/ArtisticWorkshop.webp'),
   },
   {
     id: '10',
@@ -97,7 +97,7 @@ const activities = [
     favorite: true,
     package: '2',
     location: { latitude: 48.8900, longitude: 2.3500 },
-    image: require('../../assets/images/LaCitedesEnfants.jpg'),
+    image: require('../../assets/images/Activity/LaCitedesEnfants.jpg'),
   },
   {
     id: '11',
@@ -107,7 +107,7 @@ const activities = [
     favorite: false,
     package: '1',
     location: { latitude: 48.7600, longitude: 2.4100 },
-    image: require('../../assets/images/aquaparkkids.png'),
+    image: require('../../assets/images/Activity/aquaparkkids.png'),
   },
   {
     id: '12',
@@ -117,7 +117,7 @@ const activities = [
     favorite: true,
     package: '3',
     location: { latitude: 48.8500, longitude: 2.3500 },
-    image: require('../../assets/images/aquaparkkids.png'),
+    image: require('../../assets/images/Activity/aquaparkkids.png'),
   },
   {
     id: '13',
@@ -127,7 +127,7 @@ const activities = [
     favorite: false,
     package: '1',
     location: { latitude: 48.8700, longitude: 2.2800 },
-    image: require('../../assets/images/aquaparkkids.png'),
+    image: require('../../assets/images/Activity/aquaparkkids.png'),
   },
   {
     id: '14',
@@ -137,7 +137,7 @@ const activities = [
     favorite: true,
     package: '2',
     location: { latitude: 48.9200, longitude: 2.3000 },
-    image: require('../../assets/images/aquaparkkids.png'),
+    image: require('../../assets/images/Activity/aquaparkkids.png'),
   },
   {
     id: '15',

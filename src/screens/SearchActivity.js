@@ -45,7 +45,7 @@ const SearchActivity = () => {
        <View style={styles.header}>
          <HeaderBackground />
          <View style={styles.headerContent}>
-           <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+           <Image source={require('../../assets/images/DA/logo.png')} style={styles.logo} />
            <Text style={styles.headerText}>Recherche</Text>
          </View>
        </View>
@@ -70,12 +70,6 @@ const SearchActivity = () => {
 
 
       <MapViewComponent
-        location={{
-          latitude: 48.8566, // Exemple : Paris comme position par défaut
-          longitude: 2.3522,
-          latitudeDelta: 0.00422,
-          longitudeDelta: 0.00621,
-        }}
         markers={filteredActivities.map((activity) => ({
           latitude: activity.location.latitude,
           longitude: activity.location.longitude,
