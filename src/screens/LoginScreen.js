@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  Image,
-  Dimensions,
-  Switch,
-} from 'react-native';
-import Svg, { Defs, RadialGradient, Stop, Circle } from 'react-native-svg';
-
-const { width, height } = Dimensions.get('window');
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image, Switch } from 'react-native';
+import GradientBackground from '../components/GradientBackground'; // Import du composant GradientBackground
 
 const LoginScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -19,40 +8,7 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Svg height={height} width={width} style={StyleSheet.absoluteFill}>
-        <Defs>
-          <RadialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <Stop offset="0%" stopColor="#ffcccc" stopOpacity="0.8" />
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </RadialGradient>
-          <RadialGradient id="grad2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <Stop offset="0%" stopColor="#cce5ff" stopOpacity="0.9" />
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </RadialGradient>
-          <RadialGradient id="grad3" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <Stop offset="0%" stopColor="#f6ff33" stopOpacity="0.3" />
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </RadialGradient>
-          <RadialGradient id="grad4" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <Stop offset="0%" stopColor="#cce5ff" stopOpacity="0.5" />
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </RadialGradient>
-          <RadialGradient id="grad5" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <Stop offset="0%" stopColor="#f6ff33" stopOpacity="0.2" />
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </RadialGradient>
-        </Defs>
-
-        <Circle cx="0" cy="150" r="150" fill="url(#grad1)" />
-        <Circle cx="100" cy="150" r="80" fill="url(#grad4)" />
-        <Circle cx={width} cy="50" r="160" fill="url(#grad2)" />
-        <Circle cx={width} cy="250" r="140" fill="url(#grad5)" />
-        <Circle cx={width - 100} cy="50" r="100" fill="url(#grad3)" />
-        <Circle cx="0" cy={height} r="160" fill="url(#grad1)" />
-        <Circle cx="0" cy={height - 150} r="70" fill="url(#grad4)" />
-        <Circle cx={width - 50} cy={height} r="130" fill="url(#grad1)" />
-        <Circle cx={width} cy={height - 200} r="160" fill="url(#grad2)" />
-      </Svg>
+      <GradientBackground /> 
 
       <Image
         source={require('../../assets/images/DA/logo.png')}
@@ -74,13 +30,11 @@ const LoginScreen = () => {
         />
         <View style={styles.options}>
           <View style={styles.rememberMeContainer}>
-            {/* Switch à gauche du texte */}
             <Switch
-              trackColor={{ false: '#767577', true: '#4B9BF1' }} // Bleu quand inactif, bleu clair quand activé
-              thumbColor={isEnabled ? '#FFEB3B' : '#f4f3f4'} // Jaune pour le rond quand activé
+              trackColor={{ false: '#767577', true: '#4B9BF1' }}
+              thumbColor={isEnabled ? '#FFEB3B' : '#f4f3f4'}
               onValueChange={toggleSwitch}
               value={isEnabled}
-              style={styles.switch} // Style pour augmenter la taille
             />
             <Text style={styles.rememberMe}>Remember Me</Text>
           </View>
@@ -91,27 +45,25 @@ const LoginScreen = () => {
 
         <TouchableOpacity style={styles.loginButton}>
           <Image
-            source={require('../../assets/images/Utils/ButtonLogin.png')} // Remplacer par le chemin de ton image
+            source={require('../../assets/images/Utils/ButtonLogin.png')}
             style={styles.imageButton}
           />
         </TouchableOpacity>
 
-        {/* Texte OR en gris */}
         <Text style={styles.orText}>OR</Text>
-
       </View>
 
       <View style={styles.socialLogin}>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={require('../../assets/images/Utils/GoogleLogo.png')} // Remplace par le logo Google
+            source={require('../../assets/images/Utils/GoogleLogo.png')}
             style={styles.socialButtonIcon}
           />
           <Text style={styles.socialButtonText}>Login with Google</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={require('../../assets/images/Utils/FacebookLogo.png')} // Remplace par le logo Facebook
+            source={require('../../assets/images/Utils/FacebookLogo.png')}
             style={styles.socialButtonIcon}
           />
           <Text style={styles.socialButtonText}>Login with Facebook</Text>
@@ -130,7 +82,6 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -168,12 +119,12 @@ const styles = StyleSheet.create({
   rememberMe: {
     color: '#666',
     fontSize: 14,
-    marginLeft: 10, // Espacement entre le switch et le texte
+    marginLeft: 10,
   },
   forgotPassword: {
     color: '#6200EE',
     fontSize: 14,
-    marginTop : 4,
+    marginTop: 4,
   },
   loginButton: {
     width: '100%',
@@ -182,9 +133,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   imageButton: {
-    width: '100%', // Largeur de l'image
-    height: 64, // Hauteur de l'image
-    resizeMode: 'contain', // Adapter l'image sans déformer
+    width: '100%',
+    height: 64,
+    resizeMode: 'contain',
   },
   socialLogin: {
     textAlign: 'center',
@@ -208,9 +159,9 @@ const styles = StyleSheet.create({
   socialButtonText: {
     color: '#333',
     fontSize: 16,
-    textAlign: 'center', // Centrer le texte
-    flex: 1, // Prendre tout l'espace restant pour centrer
-    marginLeft : -23
+    textAlign: 'center',
+    flex: 1,
+    marginLeft: -23
   },
   signupText: {
     color: '#666',
@@ -222,14 +173,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   switch: {
-    transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] // Augmenter la taille du switch
+    transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }]
   },
   orText: {
     color: '#888',
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop : 8,
-    marginBottom : -10,
+    marginTop: 8,
+    marginBottom: -10,
   },
 });
 

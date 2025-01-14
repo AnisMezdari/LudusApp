@@ -6,6 +6,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SearchActivity from './src/screens/SearchActivity';
 import LoginScreen from './src/screens/LoginScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
+import VerificationScreen from './src/screens/VerificationScreen'
+import ResetPasswordScreen from './src/screens/ResetPasswordScreen'
 
 // Écrans des onglets
 const ExploreScreen = () => (
@@ -57,6 +60,9 @@ const AppNavigator = () => {
       <Tab.Screen name="Search" component={SearchActivity} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
       <Tab.Screen name="Account" component={LoginScreen} />
+      <Tab.Screen name="Inscription" component={SignUpScreen} />
+      <Tab.Screen name="VerifCode" component={VerificationScreen} />
+      <Tab.Screen name="Reset" component={ResetPasswordScreen} />
     </Tab.Navigator>
   );
 };
