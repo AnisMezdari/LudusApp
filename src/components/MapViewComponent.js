@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 
-const MapViewComponent = ({ markers }) => {
+const MapViewComponent = ({ markers, onMarkerPress }) => {
   const [location, setLocation] = useState(null);
 
   // Utiliser useLayoutEffect pour s'assurer que le contexte est prêt
@@ -36,12 +36,11 @@ const MapViewComponent = ({ markers }) => {
           maximumAge: 10000,
         }
       );
-    }, 500); // Retarder de 500ms, tu peux ajuster ce délai si nécessaire
+    }, 500);
 
-    return () => clearTimeout(timer); // Nettoyer si le composant est démonté avant
-  }, []); // Le useEffect ne s'exécute qu'une fois au montage
+    return () => clearTimeout(timer);
+  }, []);
 
-  // Vérifier si la localisation est définie avant de rendre la carte
   if (!location) {
     return <View style={styles.mapContainer}><Text>Chargement...</Text></View>;
   }
@@ -52,34 +51,77 @@ const MapViewComponent = ({ markers }) => {
         style={styles.map}
         region={location} // Utilise 'region' pour que la carte suive la position de l'utilisateur
         showsUserLocation={true}
-        showsMyLocationButton={true}
+        showsMyLocationButton={false} // Masquer le bouton par défaut de géolocalisation
         provider="google"
       >
         {markers && markers.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            title={marker.title}
-            description={marker.description}
-          />
+          marker.latitude && marker.longitude ? (
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}
+              title={marker.title}
+              description={marker.description}
+              onPress={() => onMarkerPress(marker)} // Passer l'objet marker à onMarkerPress
+            />
+          ) : null
         ))}
       </MapView>
+
+      {/* Bouton de géolocalisation en bas à droite */}
+      <TouchableOpacity
+        style={styles.locationButton}
+        onPress={() => {
+          Geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setLocation({
+                latitude,
+                longitude,
+                latitudeDelta: 0.00422,
+                longitudeDelta: 0.00621,
+              });
+            },
+            (error) => {
+              console.log("Erreur géolocalisation:", error);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 15000,
+              maximumAge: 10000,
+            }
+          );
+        }}
+      >
+        <Text style={styles.locationButtonText}>📍</Text> {/* Tu peux remplacer l'icône par une autre */}
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mapContainer: {
-    height: 200,
+    flex: 1,
     width: '100%',
-    marginBottom: 20,
   },
   map: {
     width: '100%',
     height: '100%',
+  },
+  locationButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 50,
+    elevation: 5,
+  },
+  locationButtonText: {
+    fontSize: 24,
+    color: '#333',
   },
 });
 

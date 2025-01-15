@@ -9,6 +9,7 @@ const SearchBar = ({ value, onChangeText }) => {
         value={value}
         onChangeText={onChangeText}
         style={styles.input}
+        placeholderTextColor="#666" // Couleur du texte du placeholder
       />
     </View>
   );
@@ -16,12 +17,18 @@ const SearchBar = ({ value, onChangeText }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    width: '100%',
+    backgroundColor: 'white', // Fond blanc pour la barre
+    borderRadius: 8,
+    elevation: 5, // Ajoute une ombre sous la barre de recherche si nécessaire
   },
   input: {
-    borderWidth: 1,
+    height: 50,
     borderColor: '#ccc',
-    padding: 10,
+
+    paddingLeft: 10,
+    fontSize: 16,
+    color: '#333', // Couleur du texte en noir
     borderRadius: 8,
   },
 });

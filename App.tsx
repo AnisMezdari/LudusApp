@@ -4,18 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import HomeScreen from './src/screens/HomeScreen';
 import SearchActivity from './src/screens/SearchActivity';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import VerificationScreen from './src/screens/VerificationScreen'
 import ResetPasswordScreen from './src/screens/ResetPasswordScreen'
 
-// Écrans des onglets
-const ExploreScreen = () => (
-  <View style={styles.screen}>
-    <Text>Explore Page</Text>
-  </View>
-);
 
 const CalendarScreen = () => (
   <View style={styles.screen}>
@@ -34,11 +29,11 @@ const AppNavigator = () => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
           switch (route.name) {
-            case 'Explore':
-              iconName = 'compass-outline';
+            case 'Home':
+              iconName = 'home';
               break;
-            case 'Search':
-              iconName = 'search-outline';
+            case 'Map':
+              iconName = 'compass-outline';
               break;
             case 'Calendar':
               iconName = 'calendar-outline';
@@ -56,8 +51,8 @@ const AppNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Search" component={SearchActivity} />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Map" component={SearchActivity} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
       <Tab.Screen name="Account" component={LoginScreen} />
       <Tab.Screen name="Inscription" component={SignUpScreen} />

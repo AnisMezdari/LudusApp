@@ -8,6 +8,7 @@ const activities = [
     package: '1',
     location: { latitude: 48.7639, longitude: 2.3755 },
     image: require('../../assets/images/Activity/guillipark-thiais.jpg'),
+    recommended: true,
   },
   {
     id: '2',
@@ -18,6 +19,7 @@ const activities = [
     package: '3',
     location: { latitude: 48.8566, longitude: 2.3522 },
     image: require('../../assets/images/Activity/spa.jpg'),
+    recommended: true,
   },
   {
     id: '3',
@@ -28,6 +30,7 @@ const activities = [
     package: '1',
     location: { latitude: 48.7200, longitude: 2.3000 },
     image: require('../../assets/images/Activity/funland.jpg'),
+    recommended: false,
   },
   {
     id: '4',
@@ -38,6 +41,7 @@ const activities = [
     package: '2',
     location: { latitude: 48.9100, longitude: 2.2600 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
+    distance : 0.5,
   },
   {
     id: '5',
@@ -48,6 +52,7 @@ const activities = [
     package: '2',
     location: { latitude: 48.8700, longitude: 2.3200 },
     image: require('../../assets/images/Activity/LePetitZoo.jpg'),
+    distance : 0.1,
   },
   {
     id: '6',
@@ -58,6 +63,7 @@ const activities = [
     package: '3',
     location: { latitude: 48.8500, longitude: 2.3000 },
     image: require('../../assets/images/Activity/bubleSpa.jpg'),
+    distance : 1,
   },
   {
     id: '7',
