@@ -84,6 +84,11 @@ const activities = [
     package: '4',
     location: { latitude: 48.8200, longitude: 2.4000 },
     image: require('../../assets/images/Activity/PlanetariumParis.jpg'),
+    description : "Grâce à ses dix vidéoprojecteurs, le planétarium bénéficie d'un système de projection Laser Haute Définition en 8K. Le détail illimité du simulateur astronomique vous donnera une sensation de profondeur, d’immensité et rendra l’expérience impressionnante... Laissez-vous surprendre ! ",
+    price : "15-20",
+    date : "12 juillet 2025",
+    address : "30 Av. Corentin Carlou, 75019 Paris"
+
   },
   {
     id: '9',

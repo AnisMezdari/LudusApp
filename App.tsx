@@ -10,13 +10,8 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import VerificationScreen from './src/screens/VerificationScreen'
 import ResetPasswordScreen from './src/screens/ResetPasswordScreen'
+import ActivityDetails from './src/screens/ActivityDetails'
 
-
-const CalendarScreen = () => (
-  <View style={styles.screen}>
-    <Text>Calendar Page</Text>
-  </View>
-);
 
 
 // Création des onglets
@@ -53,7 +48,7 @@ const AppNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Map" component={SearchActivity} />
-      <Tab.Screen name="Calendar" component={CalendarScreen} />
+      <Tab.Screen name="Calendar" component={ActivityDetails} />
       <Tab.Screen name="Account" component={LoginScreen} />
       <Tab.Screen name="Inscription" component={SignUpScreen} />
       <Tab.Screen name="VerifCode" component={VerificationScreen} />
