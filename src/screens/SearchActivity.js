@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import activities from '../data/Activities';
 import SearchBar from '../components/SearchBar';
 import FilterButton from '../components/FilterButtons';
@@ -13,10 +13,12 @@ const SearchActivity = () => {
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [isLoading, setIsLoading] = useState(true); // Ajout de l'état pour savoir si le chargement est en cours
   const navigation = useNavigation();
 
   useEffect(() => {
     setFilteredActivities(activities);
+    setIsLoading(false); // Simule la fin du chargement après un délai
   }, []);
 
   const handleFilter = (filter) => {
@@ -64,50 +66,49 @@ const SearchActivity = () => {
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
       <View style={styles.searchBar}>
         <SearchBar value={searchTerm} onChangeText={handleSearch} />
       </View>
-
-      {/* Filter Buttons */}
+      
       <View style={styles.filterContainer}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filterScrollView}
         >
-          <FilterButton label="All" onSelectFilter={() => handleFilter('All')} />
-          <FilterButton label="Arts" onSelectFilter={() => handleFilter('Arts')} />
-          <FilterButton label="Outdoors" onSelectFilter={() => handleFilter('Outdoors')} />
-          <FilterButton label="Playground" onSelectFilter={() => handleFilter('Playground')} />
-          <FilterButton label="Museum" onSelectFilter={() => handleFilter('Museum')} />
-          <FilterButton label="Sports" onSelectFilter={() => handleFilter('Sports')} />
+          <FilterButton label="All" onSelectFilter={() => handleFilter('All')} style={styles.allCategory} />
+          <FilterButton label="Arts" onSelectFilter={() => handleFilter('Arts')} style={styles.category} />
+          <FilterButton label="Outdoors" onSelectFilter={() => handleFilter('Outdoors')} style={styles.category} />
+          <FilterButton label="Playground" onSelectFilter={() => handleFilter('Playground')} style={styles.category} />
+          <FilterButton label="Museum" onSelectFilter={() => handleFilter('Museum')} style={styles.category} />
+          <FilterButton label="Sports" onSelectFilter={() => handleFilter('Sports')} style={styles.category} />
         </ScrollView>
       </View>
 
-      {/* Google Map */}
       <View style={styles.mapContainer}>
-        <MapViewComponent
-          markers={filteredActivities.map((activity) => ({
-            latitude: activity.location.latitude,
-            longitude: activity.location.longitude,
-            title: activity.title,
-            type: activity.type,
-            image: activity.image,
-            age: activity.age,
-            description : activity.description,
-            price : activity.price,
-            date : activity.date,
-            address : activity.address,
-          }))}
-          onMarkerPress={handleMarkerPress}
-        />
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#4B9BF1" />
+          </View>
+        ) : (
+          <MapViewComponent
+            markers={filteredActivities.map((activity) => ({
+              latitude: activity.location.latitude,
+              longitude: activity.location.longitude,
+              title: activity.title,
+              type: activity.type,
+              image: activity.image,
+              age: activity.age,
+              description: activity.description,
+              price: activity.price,
+              date: activity.date,
+              address: activity.address,
+            }))}
+            onMarkerPress={handleMarkerPress}
+          />
+        )}
       </View>
 
-      {/* Afficher l'arrière-plan du Header */}
-
-
-      {/* Display Activity Info if a marker is clicked */}
       {selectedActivity && (
         <View style={styles.activityDetails}>
           <HeaderBackground style={styles.gradientBackground} />
@@ -122,15 +123,10 @@ const SearchActivity = () => {
               </TouchableOpacity>
             </View>
             <Text style={styles.activityTitle}>{selectedActivity.title}</Text>
-
-            {/* Age and Category on the same line */}
             <View style={styles.activityMeta}>
               <Text style={styles.activityAge}>{selectedActivity.age} years</Text>
               <Text style={styles.activityType}>{selectedActivity.type}</Text>
             </View>
-
-            {/* Si vous voulez supprimer la description de l'activité juste en dessous du marqueur, vous pouvez le faire ici */}
-            {/* <Text style={styles.activityDescription}>{selectedActivity.description}</Text> */}
           </TouchableOpacity>
         </View>
       )}
@@ -169,6 +165,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 1, // La carte est derrière la barre de recherche et les filtres
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }], // Pour centrer le spinner
+    zIndex: 2,
   },
   activityDetails: {
     position: 'absolute',
@@ -241,6 +244,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 90, // Ajoute une marge pour le positionner à gauche
     transform: [{ translateY: -57 }],
+  },
+  category: {
+    minWidth: 90, // Largeur par défaut
+  },
+  allCategory: {
+    width: 60, // Largeur personnalisée pour "All"
+    marginRight : 7
   },
 
 });

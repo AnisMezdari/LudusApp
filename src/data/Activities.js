@@ -250,15 +250,7 @@ const activities = [
    package: '1',
    location: { latitude: 48.9500, longitude: 2.2500 },
  },
- {
-   id: '26',
-   title: 'Planetarium Paris',
-   type: 'Museum',
-   age: '4-10',
-   favorite: false,
-   package: '4',
-   location: { latitude: 48.8200, longitude: 2.4000 },
- },
+ 
  {
    id: '27',
    title: 'Artistic Workshop',

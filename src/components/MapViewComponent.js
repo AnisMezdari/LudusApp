@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity,Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Pour une icône moderne
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const MapViewComponent = ({ markers, onMarkerPress }) => {
   const [location, setLocation] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useLayoutEffect(() => {
     const timer = setTimeout(() => {
@@ -18,6 +19,7 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
             latitudeDelta: 0.00422,
             longitudeDelta: 0.00621,
           });
+          setIsLoading(false);
         },
         (error) => {
           console.log('Erreur géolocalisation:', error);
@@ -27,6 +29,7 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
             latitudeDelta: 0.00422,
             longitudeDelta: 0.00621,
           });
+          setIsLoading(false);
         },
         {
           enableHighAccuracy: true,
@@ -40,6 +43,7 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
   }, []);
 
   const handleGeolocationPress = () => {
+    setIsLoading(true);
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -49,9 +53,11 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
           latitudeDelta: 0.00422,
           longitudeDelta: 0.00621,
         });
+        setIsLoading(false);
       },
       (error) => {
         console.log('Erreur géolocalisation:', error);
+        setIsLoading(false);
       },
       {
         enableHighAccuracy: true,
@@ -61,10 +67,10 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
     );
   };
 
-  if (!location) {
+  if (isLoading) {
     return (
       <View style={styles.mapContainer}>
-        <Text>Chargement...</Text>
+        <ActivityIndicator size="large" color="#4B9BF1" style={styles.loadingSpinner} />
       </View>
     );
   }
@@ -75,7 +81,7 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
         style={styles.map}
         region={location}
         showsUserLocation={true}
-        showsMyLocationButton={false} // Désactivé pour éviter la superposition avec le bouton personnalisé
+        showsMyLocationButton={false}
         provider="google"
       >
         {markers &&
@@ -89,12 +95,12 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
                 }}
                 title={marker.title}
                 onPress={() => onMarkerPress(marker)}
+                pinColor="#FFEB99"
               />
             ) : null
           )}
       </MapView>
 
-      {/* Bouton de géolocalisation en haut à droite */}
       <TouchableOpacity
         style={styles.geolocationButton}
         onPress={handleGeolocationPress}
@@ -109,6 +115,8 @@ const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   map: {
     width: '100%',
@@ -116,15 +124,20 @@ const styles = StyleSheet.create({
   },
   geolocationButton: {
     position: 'absolute',
-    top: 33, // En haut
-    right: 12, // À droite
+    top: 33,
+    right: 12,
     backgroundColor: '#007BFF',
     width: 40,
     height: 40,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5, // Ombre pour donner un effet "flottant"
+    elevation: 5,
+  },
+  loadingSpinner: {
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -25 }],
   },
 });
 
