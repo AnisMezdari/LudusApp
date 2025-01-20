@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useLayoutEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from 'react-native';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const MapViewComponent = ({ markers, onMarkerPress }) => {
+const MapViewComponent = React.forwardRef(({ markers, onMarkerPress, selectedMarker }, ref) => {
   const [location, setLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
 
   useLayoutEffect(() => {
     const timer = setTimeout(() => {
@@ -78,27 +79,31 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
   return (
     <View style={styles.mapContainer}>
       <MapView
+        ref={ref}
         style={styles.map}
         region={location}
         showsUserLocation={true}
         showsMyLocationButton={false}
         provider="google"
+        tracksViewChanges={true}
       >
         {markers &&
-          markers.map((marker, index) =>
-            marker.latitude && marker.longitude ? (
+          markers.map((marker, index) => {
+            const isActive = selectedMarker && selectedMarker.id === marker.id;
+
+            return marker.location.latitude && marker.location.longitude ? (
               <Marker
-                key={index}
+                key={`${marker.id}${isActive}`}
                 coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
+                  latitude: marker.location.latitude,
+                  longitude: marker.location.longitude,
                 }}
-                title={marker.title}
+                pinColor={isActive ? '#FFFF00' : '#B8860B'}
                 onPress={() => onMarkerPress(marker)}
-                pinColor="#FFEB99"
-              />
-            ) : null
-          )}
+              >
+              </Marker>
+            ) : null;
+          })}
       </MapView>
 
       <TouchableOpacity
@@ -109,7 +114,7 @@ const MapViewComponent = ({ markers, onMarkerPress }) => {
       </TouchableOpacity>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   mapContainer: {
@@ -139,6 +144,20 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{ translateY: -25 }],
   },
+
+  calloutContainer: {
+  padding: 5,
+  backgroundColor: 'white',
+  borderRadius: 5,
+  width: 120, // Ajuste selon la taille du texte
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+calloutText: {
+  fontSize: 14,
+  fontWeight: 'bold',
+  color: 'black',
+},
 });
 
 export default MapViewComponent;

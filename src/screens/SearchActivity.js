@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import activities from '../data/Activities';
 import SearchBar from '../components/SearchBar';
 import FilterButton from '../components/FilterButtons';
 import MapViewComponent from '../components/MapViewComponent';
 import Icon from 'react-native-vector-icons/Feather';
-import HeaderBackground from '../components/HeaderBackground'; // Ajout de l'import
+import HeaderBackground from '../components/HeaderBackground';
 import { useNavigation } from '@react-navigation/native';
 
 const SearchActivity = () => {
@@ -13,12 +13,19 @@ const SearchActivity = () => {
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [isLoading, setIsLoading] = useState(true); // Ajout de l'état pour savoir si le chargement est en cours
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
+  const mapRef = useRef(null);
+  const [region, setRegion] = useState({
+    latitude: 48.8566,
+    longitude: 2.3522,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
 
   useEffect(() => {
     setFilteredActivities(activities);
-    setIsLoading(false); // Simule la fin du chargement après un délai
+    setIsLoading(false);
   }, []);
 
   const handleFilter = (filter) => {
@@ -37,9 +44,10 @@ const SearchActivity = () => {
   const handleSearch = (text) => {
     setSearchTerm(text);
     setFilteredActivities(
-      activities.filter((activity) =>
-        activity.title.toLowerCase().includes(text.toLowerCase()) &&
-        (selectedFilter === 'All' || activity.type.toLowerCase().includes(selectedFilter.toLowerCase()))
+      activities.filter(
+        (activity) =>
+          activity.title.toLowerCase().includes(text.toLowerCase()) &&
+          (selectedFilter === 'All' || activity.type.toLowerCase().includes(selectedFilter.toLowerCase()))
       )
     );
   };
@@ -48,20 +56,82 @@ const SearchActivity = () => {
     setSelectedActivity(activity);
   };
 
-  const handlePrevActivity = () => {
-    if (selectedActivityIndex > 0) {
-      setSelectedActivityIndex(selectedActivityIndex - 1);
-    }
-  };
-
-  const handleNextActivity = () => {
-    if (selectedActivityIndex < filteredActivities.length - 1) {
-      setSelectedActivityIndex(selectedActivityIndex + 1);
-    }
-  };
-
   const handleActivityPress = (activity) => {
     navigation.navigate('Calendar', { activity });
+  };
+
+  const navigateToMarker = (direction) => {
+    if (!selectedActivity || !filteredActivities.length) return;
+
+    let maxDistance = 0.05; // Distance maximale initiale
+    const maxAllowedDistance = 1.0; // Distance maximale à ne pas dépasser
+    const step = 0.01; // Incrément de la distance à chaque itération
+    let nextActivity = null;
+
+    // Fonction pour calculer la distance euclidienne (approximation rapide)
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+      return Math.sqrt(
+        Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)
+      );
+    };
+
+    while (!nextActivity && maxDistance <= maxAllowedDistance) {
+      // Filtrer les activités dans la direction spécifiée et dans la limite de distance
+      const activitiesInDirection = filteredActivities.filter((activity) => {
+        const isCorrectDirection =
+          direction === "right"
+            ? activity.location.longitude > selectedActivity.location.longitude
+            : activity.location.longitude < selectedActivity.location.longitude;
+        const distance = calculateDistance(
+          selectedActivity.location.latitude,
+          selectedActivity.location.longitude,
+          activity.location.latitude,
+          activity.location.longitude
+        );
+        return isCorrectDirection && distance <= maxDistance;
+      });
+
+      if (activitiesInDirection.length > 0) {
+        // Trouver l'activité la plus proche parmi celles filtrées
+        nextActivity = activitiesInDirection.reduce((closest, current) => {
+          const distanceCurrent = calculateDistance(
+            selectedActivity.location.latitude,
+            selectedActivity.location.longitude,
+            current.location.latitude,
+            current.location.longitude
+          );
+          const distanceClosest = calculateDistance(
+            selectedActivity.location.latitude,
+            selectedActivity.location.longitude,
+            closest.location.latitude,
+            closest.location.longitude
+          );
+          return distanceCurrent < distanceClosest ? current : closest;
+        });
+      } else {
+        maxDistance += step; // Augmenter la distance et réessayer
+      }
+    }
+
+    if (!nextActivity) {
+      console.log(`Aucune activité trouvée à ${direction}, même après augmentation de la distance.`);
+    } else {
+      // Mettre à jour l'activité sélectionnée et déplacer la carte
+      handleMarkerPress(nextActivity);
+      mapRef.current.animateToRegion(
+        {
+          latitude: nextActivity.location.latitude,
+          longitude: nextActivity.location.longitude,
+          latitudeDelta: region.latitudeDelta,
+          longitudeDelta: region.longitudeDelta,
+        },
+        500
+      );
+    }
+  };
+
+  const handleRegionChange = (newRegion) => {
+    setRegion(newRegion);
   };
 
   return (
@@ -69,13 +139,9 @@ const SearchActivity = () => {
       <View style={styles.searchBar}>
         <SearchBar value={searchTerm} onChangeText={handleSearch} />
       </View>
-      
+
       <View style={styles.filterContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterScrollView}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScrollView}>
           <FilterButton label="All" onSelectFilter={() => handleFilter('All')} style={styles.allCategory} />
           <FilterButton label="Arts" onSelectFilter={() => handleFilter('Arts')} style={styles.category} />
           <FilterButton label="Outdoors" onSelectFilter={() => handleFilter('Outdoors')} style={styles.category} />
@@ -92,9 +158,12 @@ const SearchActivity = () => {
           </View>
         ) : (
           <MapViewComponent
+            ref={mapRef}
             markers={filteredActivities.map((activity) => ({
-              latitude: activity.location.latitude,
-              longitude: activity.location.longitude,
+              location: {
+                latitude: activity.location.latitude,
+                longitude: activity.location.longitude,
+              },
               title: activity.title,
               type: activity.type,
               image: activity.image,
@@ -103,8 +172,11 @@ const SearchActivity = () => {
               price: activity.price,
               date: activity.date,
               address: activity.address,
+              id: activity.id,
             }))}
             onMarkerPress={handleMarkerPress}
+            selectedMarker={selectedActivity}
+            onRegionChangeComplete={handleRegionChange}
           />
         )}
       </View>
@@ -115,10 +187,10 @@ const SearchActivity = () => {
           <TouchableOpacity style={styles.activityInfo} onPress={() => handleActivityPress(selectedActivity)}>
             <Image source={selectedActivity.image} style={styles.activityImage} />
             <View style={styles.navButtons}>
-              <TouchableOpacity style={styles.leftArrowContainer} onPress={handlePrevActivity}>
+              <TouchableOpacity style={styles.leftArrowContainer} onPress={() => navigateToMarker("left")}>
                 <Icon style={styles.leftArrow} name="chevron-left" size={45} color="#4B9BF1" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.rightArrowContainer} onPress={handleNextActivity}>
+              <TouchableOpacity style={styles.rightArrowContainer} onPress={() => navigateToMarker("right")}>
                 <Icon name="chevron-right" size={45} color="#4B9BF1" />
               </TouchableOpacity>
             </View>
@@ -130,10 +202,10 @@ const SearchActivity = () => {
           </TouchableOpacity>
         </View>
       )}
-
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -254,5 +326,4 @@ const styles = StyleSheet.create({
   },
 
 });
-
 export default SearchActivity;
