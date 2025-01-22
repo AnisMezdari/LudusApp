@@ -15,19 +15,22 @@ import GradientBackground from '../components/GradientBackground';
 import ActivitySection from '../components/ActivitySection';
 import activities from '../data/Activities';
 import { useNavigation } from '@react-navigation/native';
+import ActivityCard from '../components/ActivityCard'; // Assure-toi d'importer ActivityCard
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [selectedAge, setSelectedAge] = useState('All');
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [ageVisible, setAgeVisible] = useState(false);
   const [favoritesVisible, setFavoritesVisible] = useState(false);
   const [forfaitVisible, setForfaitVisible] = useState(false);
+  const [activitiesList, setActivitiesList] = useState(activities); // Gestion des activités
   const navigation = useNavigation();
 
   const filters = ['All', 'Playground', 'Spa', 'Water Park', 'Zoo', 'Sports', 'Museum', 'Arts', 'Outdoors'];
-  const ageRanges = ['0-5', '6-10', '11-15', '16+'];
+  const ageRanges = ['All', '0-3', '3-6', '6-11', '12+']; // Ajout de "All"
   const forfaits = ['1-Week', '2-Week', 'Monthly', 'Annual'];
 
   const handleActivityPress = (activity) => {
@@ -39,14 +42,35 @@ const Home = () => {
     setIsDropdownVisible(false);
   };
 
+  const handleAgeFilter = (age) => {
+    setSelectedAge(age);
+    setAgeVisible(false);
+  };
+
   const handleSearch = (text) => {
     setSearchQuery(text);
   };
 
-  const filteredActivities = activities.filter((activity) => {
+  const handleFavoriteFilter = () => {
+    setFavoritesVisible(!favoritesVisible);
+  };
+
+  // Fonction pour mettre à jour l'état des favoris
+  const handleFavoriteToggle = (id, newFavoriteStatus) => {
+    setActivitiesList((prevActivities) =>
+      prevActivities.map((activity) =>
+        activity.id === id ? { ...activity, favorite: newFavoriteStatus } : activity
+      )
+    );
+  };
+
+  const filteredActivities = activitiesList.filter((activity) => {
     const matchesSearch = activity.title.toLowerCase().includes(searchQuery.toLowerCase()) || activity.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = selectedFilter === 'All' || activity.type === selectedFilter;
-    return matchesSearch && matchesFilter;
+    const matchesAge = selectedAge === 'All' || (activity.age && activity.age === selectedAge); // Ajout du filtre pour "All"
+    const matchesFavorites = !favoritesVisible || activity.favorite; // Filtre par favoris
+
+    return matchesSearch && matchesFilter && matchesAge && matchesFavorites;
   });
 
   const ourSelection = filteredActivities.filter((activity) => activity.favorite);
@@ -65,10 +89,8 @@ const Home = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Dropdown Container */}
       {isDropdownVisible && (
         <View style={styles.dropdownContainer}>
-          {/* Categories Section */}
           <TouchableOpacity onPress={() => setCategoryVisible(!categoryVisible)}>
             <Text style={styles.dropdownHeader}>Categories</Text>
           </TouchableOpacity>
@@ -86,45 +108,26 @@ const Home = () => {
             </View>
           )}
 
-          {/* Age Section */}
           <TouchableOpacity onPress={() => setAgeVisible(!ageVisible)}>
             <Text style={styles.dropdownHeader}>Age</Text>
           </TouchableOpacity>
           {ageVisible && (
             <View style={styles.dropdownItems}>
               {ageRanges.map((age, index) => (
-                <TouchableOpacity key={index} style={styles.dropdownItem}>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.dropdownItem}
+                  onPress={() => handleAgeFilter(age)}
+                >
                   <Text style={styles.dropdownText}>{age}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           )}
 
-          {/* Favorites Section */}
-          <TouchableOpacity onPress={() => setFavoritesVisible(!favoritesVisible)}>
-            <Text style={styles.dropdownHeader}>Favoris</Text>
+          <TouchableOpacity onPress={handleFavoriteFilter}>
+            <Text style={styles.dropdownHeader}>Favorites</Text>
           </TouchableOpacity>
-          {favoritesVisible && (
-            <View style={styles.dropdownItems}>
-              <TouchableOpacity style={styles.dropdownItem}>
-                <Text style={styles.dropdownText}>Show Favorites</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {/* Forfait Section */}
-          <TouchableOpacity onPress={() => setForfaitVisible(!forfaitVisible)}>
-            <Text style={styles.dropdownHeader}>Forfait</Text>
-          </TouchableOpacity>
-          {forfaitVisible && (
-            <View style={styles.dropdownItems}>
-              {forfaits.map((forfait, index) => (
-                <TouchableOpacity key={index} style={styles.dropdownItem}>
-                  <Text style={styles.dropdownText}>{forfait}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
         </View>
       )}
 
@@ -135,6 +138,7 @@ const Home = () => {
           placeholder="Search activities..."
           value={searchQuery}
           onChangeText={handleSearch}
+          placeholderTextColor="#bbb"
         />
       </View>
 
@@ -153,9 +157,9 @@ const Home = () => {
       </View>
 
       <ScrollView style={styles.scrollableSections}>
-        <ActivitySection title="Our Selection" activities={ourSelection} onPressActivity={handleActivityPress} />
-        <ActivitySection title="Recommendations" activities={recommendations} onPressActivity={handleActivityPress} />
-        <ActivitySection title="Near of You" activities={nearOfYou} onPressActivity={handleActivityPress} />
+        <ActivitySection title="Our Selection" activities={ourSelection} onPressActivity={handleActivityPress} onFavoriteToggle={handleFavoriteToggle} />
+        <ActivitySection title="Recommendations" activities={recommendations} onPressActivity={handleActivityPress} onFavoriteToggle={handleFavoriteToggle} />
+        <ActivitySection title="Near of You" activities={nearOfYou} onPressActivity={handleActivityPress} onFavoriteToggle={handleFavoriteToggle} />
       </ScrollView>
     </View>
   );
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 125,
-    justifyContent: 'center', // Centre le logo
+    justifyContent: 'center',
   },
   logo: {
     width: 150,
@@ -180,10 +184,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   menuIconContainer: {
-    position: 'absolute', // Positionne l'icône à droite
+    position: 'absolute',
     right: 22,
-    top: '70%', // Centre verticalement
-    transform: [{ translateY: -17 }], // Ajuste la position de l'icône pour un centrage parfait
+    top: '70%',
+    transform: [{ translateY: -17 }],
   },
   searchContainer: {
     flexDirection: 'row',
@@ -197,10 +201,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    transition: 'all 0.3s ease',  // Ajoute une transition fluide
+    transition: 'all 0.3s ease',
   },
   searchContainerWithDropdown: {
-    marginTop: 5, // Réduit l'espace entre la barre de recherche et le dropdown
+    marginTop: 5,
   },
   searchIcon: {
     marginRight: 8,
@@ -209,24 +213,11 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
-  },
-  filterButton: {
-    backgroundColor: '#6C63FF',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  filterButtonText: {
-    color: '#FFF',
-    fontSize: 12,
+    color: '#bbbs',
   },
   filterContainer: {
     marginBottom: 15,
-  },
-  filterScrollView: {
-    flexDirection: 'row',
-    paddingHorizontal: 10,
+    marginLeft: 10,
   },
   filterButtonTag: {
     backgroundColor: '#E0E0E0',
@@ -235,8 +226,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginRight: 8,
     flexDirection: 'row',
-    height : 35,
-    alignItems : "center",
+    height: 35,
+    alignItems: 'center',
   },
   selectedFilter: {
     backgroundColor: '#6C63FF',
@@ -251,13 +242,10 @@ const styles = StyleSheet.create({
   scrollableSections: {
     flex: 1,
   },
-
-  // Styles pour le modal
   dropdownContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.75)', // Fond semi-transparent
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     paddingVertical: 10,
-    zIndex: 10, // S'assurer qu'il est au-dessus des autres éléments
-
+    zIndex: 10,
   },
   dropdownHeader: {
     fontSize: 16,

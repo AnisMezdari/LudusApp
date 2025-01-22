@@ -29,7 +29,7 @@ const HomeStack = () => {
 const MapStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Map" component={SearchActivity} />
+      <Stack.Screen name="MapScreen" component={SearchActivity} />
       <Stack.Screen name="ActivityDetails" component={ActivityDetails} />
     </Stack.Navigator>
   );
