@@ -1,140 +1,161 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Modal,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HeaderBackground from '../components/HeaderBackground';
+import GradientBackground from '../components/GradientBackground';
+import ActivitySection from '../components/ActivitySection';
 import activities from '../data/Activities';
-import GradientBackground from '../components/GradientBackground'; // Import du composant GradientBackground
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [categoryVisible, setCategoryVisible] = useState(false);
+  const [ageVisible, setAgeVisible] = useState(false);
+  const [favoritesVisible, setFavoritesVisible] = useState(false);
+  const [forfaitVisible, setForfaitVisible] = useState(false);
+  const navigation = useNavigation();
 
   const filters = ['All', 'Playground', 'Spa', 'Water Park', 'Zoo', 'Sports', 'Museum', 'Arts', 'Outdoors'];
+  const ageRanges = ['0-5', '6-10', '11-15', '16+'];
+  const forfaits = ['1-Week', '2-Week', 'Monthly', 'Annual'];
+
+  const handleActivityPress = (activity) => {
+    navigation.navigate('ActivityDetails', { activity });
+  };
 
   const handleFilter = (filter) => {
     setSelectedFilter(filter);
-    console.log(`Selected Filter: ${filter}`);
+    setIsDropdownVisible(false);
   };
 
-  // Filtrer les activités en fonction du type sélectionné
-  const filteredActivities = selectedFilter === 'All'
-    ? activities
-    : activities.filter(activity => activity.type === selectedFilter);
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
 
-  // Section "Our Selection" - Filtre basé sur une sélection spéciale ou des activités favorites
-  const ourSelection = activities.filter(activity => activity.favorite); // Exemple avec `favorite: true`
+  const filteredActivities = activities.filter((activity) => {
+    const matchesSearch = activity.title.toLowerCase().includes(searchQuery.toLowerCase()) || activity.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = selectedFilter === 'All' || activity.type === selectedFilter;
+    return matchesSearch && matchesFilter;
+  });
 
-  // Section "Recommendations" - Filtre basé sur un critère de recommandation
-  const recommendations = activities.filter(activity => activity.recommended); // Exemple avec `recommended: true`
-
-  // Section "Near of You" - Filtre basé sur la proximité, ici un exemple fictif avec la distance
-  const nearOfYou = activities.filter(activity => activity.distance && activity.distance <= 10); // Exemple avec `distance <= 10km`
+  const ourSelection = filteredActivities.filter((activity) => activity.favorite);
+  const recommendations = filteredActivities.filter((activity) => activity.recommended);
+  const nearOfYou = filteredActivities.filter((activity) => activity.distance && activity.distance <= 10);
 
   return (
     <View style={styles.container}>
-      {/* Ajout du fond dégradé */}
       <GradientBackground />
-
-      {/* Ajout du composant HeaderBackground */}
       <HeaderBackground />
 
-      {/* Header */}
       <View style={styles.header}>
-        <Ionicons name="menu" size={24} color="white" />
-        {/* Ajout du logo */}
         <Image source={require('../../assets/images/DA/logo.png')} style={styles.logo} />
-        <Ionicons name="notifications" size={24} color="white" />
-      </View>
-
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#999" />
-        <Text style={styles.searchInput}>Search...</Text>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>Filters</Text>
+        <TouchableOpacity style={styles.menuIconContainer} onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
+          <Ionicons name="menu" size={42} color="black" />
         </TouchableOpacity>
       </View>
 
-      {/* Filter Buttons */}
+      {/* Dropdown Container */}
+      {isDropdownVisible && (
+        <View style={styles.dropdownContainer}>
+          {/* Categories Section */}
+          <TouchableOpacity onPress={() => setCategoryVisible(!categoryVisible)}>
+            <Text style={styles.dropdownHeader}>Categories</Text>
+          </TouchableOpacity>
+          {categoryVisible && (
+            <View style={styles.dropdownItems}>
+              {filters.map((filter, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.dropdownItem}
+                  onPress={() => handleFilter(filter)}
+                >
+                  <Text style={styles.dropdownText}>{filter}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {/* Age Section */}
+          <TouchableOpacity onPress={() => setAgeVisible(!ageVisible)}>
+            <Text style={styles.dropdownHeader}>Age</Text>
+          </TouchableOpacity>
+          {ageVisible && (
+            <View style={styles.dropdownItems}>
+              {ageRanges.map((age, index) => (
+                <TouchableOpacity key={index} style={styles.dropdownItem}>
+                  <Text style={styles.dropdownText}>{age}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {/* Favorites Section */}
+          <TouchableOpacity onPress={() => setFavoritesVisible(!favoritesVisible)}>
+            <Text style={styles.dropdownHeader}>Favoris</Text>
+          </TouchableOpacity>
+          {favoritesVisible && (
+            <View style={styles.dropdownItems}>
+              <TouchableOpacity style={styles.dropdownItem}>
+                <Text style={styles.dropdownText}>Show Favorites</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Forfait Section */}
+          <TouchableOpacity onPress={() => setForfaitVisible(!forfaitVisible)}>
+            <Text style={styles.dropdownHeader}>Forfait</Text>
+          </TouchableOpacity>
+          {forfaitVisible && (
+            <View style={styles.dropdownItems}>
+              {forfaits.map((forfait, index) => (
+                <TouchableOpacity key={index} style={styles.dropdownItem}>
+                  <Text style={styles.dropdownText}>{forfait}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+      )}
+
+      <View style={[styles.searchContainer, isDropdownVisible && styles.searchContainerWithDropdown]}>
+        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search activities..."
+          value={searchQuery}
+          onChangeText={handleSearch}
+        />
+      </View>
+
       <View style={styles.filterContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterScrollView}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScrollView}>
           {filters.map((filter, index) => (
             <TouchableOpacity
               key={index}
-              style={[
-                styles.filterButtonTag,
-                selectedFilter === filter && styles.selectedFilter,
-              ]}
+              style={[styles.filterButtonTag, selectedFilter === filter && styles.selectedFilter]}
               onPress={() => handleFilter(filter)}
             >
-              <Text
-                style={[
-                  styles.filterText,
-                  selectedFilter === filter && styles.selectedFilterText,
-                ]}
-              >
-                {filter}
-              </Text>
+              <Text style={[styles.filterText, selectedFilter === filter && styles.selectedFilterText]}>{filter}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
 
-      {/* ScrollView vertical pour les sections */}
       <ScrollView style={styles.scrollableSections}>
-        {/* Section "Our Selection" */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Our Selection</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAll}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
-          {ourSelection.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Image source={item.image} style={styles.cardImage} />
-              <Text style={styles.cardText}>{item.title}</Text>
-              <Text style={styles.cardLocation}>{item.location.latitude}, {item.location.longitude}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        {/* Section "Recommendations" */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recommendations</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAll}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
-          {recommendations.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Image source={item.image} style={styles.cardImage} />
-              <Text style={styles.cardText}>{item.title}</Text>
-              <Text style={styles.cardLocation}>{item.location.latitude}, {item.location.longitude}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        {/* Section "Near of You" */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Near of You</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAll}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
-          {nearOfYou.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Image source={item.image} style={styles.cardImage} />
-              <Text style={styles.cardText}>{item.title}</Text>
-              <Text style={styles.cardLocation}>{item.location.latitude}, {item.location.longitude}</Text>
-            </View>
-          ))}
-        </ScrollView>
+        <ActivitySection title="Our Selection" activities={ourSelection} onPressActivity={handleActivityPress} />
+        <ActivitySection title="Recommendations" activities={recommendations} onPressActivity={handleActivityPress} />
+        <ActivitySection title="Near of You" activities={nearOfYou} onPressActivity={handleActivityPress} />
       </ScrollView>
     </View>
   );
@@ -149,32 +170,57 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffff',
     padding: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     height: 125,
-    position: 'relative',
+    justifyContent: 'center', // Centre le logo
   },
   logo: {
-    width: 150, // Ajuste la taille du logo
+    width: 150,
     height: 150,
     resizeMode: 'contain',
+  },
+  menuIconContainer: {
+    position: 'absolute', // Positionne l'icône à droite
+    right: 22,
+    top: '70%', // Centre verticalement
+    transform: [{ translateY: -17 }], // Ajuste la position de l'icône pour un centrage parfait
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     margin: 16,
-    padding: 10,
+    padding: 5,
     borderRadius: 8,
+    height: 60,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    transition: 'all 0.3s ease',  // Ajoute une transition fluide
   },
-  searchInput: { flex: 1, marginLeft: 10, fontSize: 16 },
+  searchContainerWithDropdown: {
+    marginTop: 5, // Réduit l'espace entre la barre de recherche et le dropdown
+  },
+  searchIcon: {
+    marginRight: 8,
+    marginLeft: 7,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
   filterButton: {
     backgroundColor: '#6C63FF',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
   },
-  filterButtonText: { color: '#FFF', fontSize: 12 },
+  filterButtonText: {
+    color: '#FFF',
+    fontSize: 12,
+  },
   filterContainer: {
     marginBottom: 15,
   },
@@ -188,6 +234,9 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     marginRight: 8,
+    flexDirection: 'row',
+    height : 35,
+    alignItems : "center",
   },
   selectedFilter: {
     backgroundColor: '#6C63FF',
@@ -199,37 +248,34 @@ const styles = StyleSheet.create({
   selectedFilterText: {
     color: '#FFF',
   },
-  section: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 16,
-    marginTop: 16,
-  },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold' },
-  seeAll: { color: '#6C63FF', fontSize: 14 },
-  cardContainer: {
-    paddingLeft: 16,
-    marginTop: 8,
-  },
-  card: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    padding: 16,
-    marginRight: 16,
-    width: 200,
-  },
-  cardImage: {
-    width: '100%',
-    height: 120,
-    borderRadius: 8,
-    marginBottom: 8,
-    resizeMode: 'cover',
-  },
-  cardText: { fontSize: 16, fontWeight: 'bold' },
-  cardLocation: { fontSize: 12, color: '#666', marginTop: 4 },
   scrollableSections: {
-    flex: 1, // Ajoute flex pour que ce container prenne tout l'espace disponible
+    flex: 1,
+  },
+
+  // Styles pour le modal
+  dropdownContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.75)', // Fond semi-transparent
+    paddingVertical: 10,
+    zIndex: 10, // S'assurer qu'il est au-dessus des autres éléments
+
+  },
+  dropdownHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    color: '#333',
+  },
+  dropdownItems: {
+    paddingHorizontal: 10,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  dropdownText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
 

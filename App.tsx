@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions'; // Gestion des permissions
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';  // Importer le Stack Navigator
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/HomeScreen';
@@ -12,10 +13,39 @@ import VerificationScreen from './src/screens/VerificationScreen'
 import ResetPasswordScreen from './src/screens/ResetPasswordScreen'
 import ActivityDetails from './src/screens/ActivityDetails'
 
-
-
 // Création des onglets
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator(); // Créer un Stack Navigator
+
+const HomeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="ActivityDetails" component={ActivityDetails} />
+    </Stack.Navigator>
+  );
+};
+
+const MapStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Map" component={SearchActivity} />
+      <Stack.Screen name="ActivityDetails" component={ActivityDetails} />
+    </Stack.Navigator>
+  );
+};
+
+
+const AccountStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Account" component={LoginScreen} />
+      <Stack.Screen name="Inscription" component={SignUpScreen} />
+      <Stack.Screen name="VerifCode" component={VerificationScreen} />
+      <Stack.Screen name="Reset" component={ResetPasswordScreen} />
+    </Stack.Navigator>
+  );
+};
 
 const AppNavigator = () => {
   return (
@@ -30,9 +60,6 @@ const AppNavigator = () => {
             case 'Map':
               iconName = 'compass-outline';
               break;
-            case 'Calendar':
-              iconName = 'calendar-outline';
-              break;
             case 'Account':
               iconName = 'person-outline';
               break;
@@ -46,13 +73,12 @@ const AppNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Map" component={SearchActivity} />
-      <Tab.Screen name="Calendar" component={ActivityDetails} />
-      <Tab.Screen name="Account" component={LoginScreen} />
-      <Tab.Screen name="Inscription" component={SignUpScreen} />
-      <Tab.Screen name="VerifCode" component={VerificationScreen} />
-      <Tab.Screen name="Reset" component={ResetPasswordScreen} />
+     <Tab.Screen name="Home" component={HomeStack} />
+     <Tab.Screen name="Map" component={MapStack} />
+     <Tab.Screen name="Account" component={AccountStack} />
+     <Tab.Screen name="Inscription" component={SignUpScreen} />
+    <Tab.Screen name="VerifCode" component={VerificationScreen} />
+    <Tab.Screen name="Reset" component={ResetPasswordScreen} />
     </Tab.Navigator>
   );
 };

@@ -1,49 +1,40 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity } from 'react-native';
 
-const ActivityCard = ({ activity, onFavoriteToggle }) => {
+const ActivityCard = ({ item, onPress }) => {
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>{activity.title}</Text>
-      <View style={styles.cardContent}>
-        <Image source={activity.image} style={styles.image} />
-        <View style={styles.textContainer}>
-          <Text>Type: {activity.type}</Text>
-          <Text>Âge: {activity.age}</Text>
-          <Text>Forfait: {activity.package}</Text>
-          <TouchableOpacity onPress={() => onFavoriteToggle(activity.id)}>
-            <Text>{activity.favorite ? '❤️' : '🤍'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    <TouchableOpacity  onPress = {onPress} style={styles.card}>
+      <Image source={item.image} style={styles.cardImage} />
+      <Text style={styles.cardText}>{item.title}</Text>
+      <Text style={styles.cardLocation}>{item.type} / {item.age} years</Text>
+      <Text style={styles.distance}>à {item.distance} Km</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10, // Espace entre le titre et le contenu
-  },
-  cardContent: {
-    flexDirection: 'row', // Organise les éléments en ligne (image à gauche, texte à droite)
-    alignItems: 'flex-start', // Aligne l'image et le texte en haut
-  },
-  image: {
-    width: 100, // Taille de l'image (ajustable)
-    height: 100, // Taille de l'image (ajustable)
+    backgroundColor: '#F5F5F5',
     borderRadius: 8,
-    marginRight: 15, // Espace entre l'image et le texte
+    padding: 16,
+    marginRight: 16,
+    width: 200,
   },
-  textContainer: {
-    flex: 1, // Permet au texte de prendre tout l'espace restant
+  cardImage: {
+    width: '100%',
+    height: 120,
+    borderRadius: 8,
+    marginBottom: 8,
+    resizeMode: 'cover',
+  },
+  cardText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cardLocation: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
   },
 });
 

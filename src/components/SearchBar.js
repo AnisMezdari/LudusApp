@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
-const SearchBar = ({ value, onChangeText }) => {
+const SearchBar = ({ value, onChangeText,onFocus }) => {
   return (
     <View style={styles.container}>
       <TextInput
@@ -9,6 +9,7 @@ const SearchBar = ({ value, onChangeText }) => {
         value={value}
         onChangeText={onChangeText}
         style={styles.input}
+        onFocus={onFocus}
         placeholderTextColor="#666" // Couleur du texte du placeholder
       />
     </View>

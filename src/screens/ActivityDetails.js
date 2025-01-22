@@ -18,7 +18,7 @@ const ActivityDetails = () => {
           <Icon
             name="arrow-back"
             size={24}
-            onPress={() => navigation.navigate('Map')} // Navigue vers l'écran "Map"
+            onPress={() => navigation.goBack()} 
           />
           <Text style={styles.headerText}>Event Details</Text>
         </View>

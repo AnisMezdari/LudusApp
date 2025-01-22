@@ -14,6 +14,7 @@ const SearchActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
+  const [isActivityDetailsVisible, setIsActivityDetailsVisible] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const [region, setRegion] = useState({
@@ -43,6 +44,7 @@ const SearchActivity = () => {
 
   const handleSearch = (text) => {
     setSearchTerm(text);
+    setIsActivityDetailsVisible(false);
     setFilteredActivities(
       activities.filter(
         (activity) =>
@@ -54,10 +56,11 @@ const SearchActivity = () => {
 
   const handleMarkerPress = (activity) => {
     setSelectedActivity(activity);
+    setIsActivityDetailsVisible(true);
   };
 
   const handleActivityPress = (activity) => {
-    navigation.navigate('Calendar', { activity });
+      navigation.navigate('ActivityDetails', { activity });
   };
 
   const navigateToMarker = (direction) => {
@@ -137,7 +140,7 @@ const SearchActivity = () => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <SearchBar value={searchTerm} onChangeText={handleSearch} />
+        <SearchBar value={searchTerm} onChangeText={handleSearch}  onFocus={() => setIsActivityDetailsVisible(false)}/>
       </View>
 
       <View style={styles.filterContainer}>
@@ -181,7 +184,7 @@ const SearchActivity = () => {
         )}
       </View>
 
-      {selectedActivity && (
+      {isActivityDetailsVisible && selectedActivity && (
         <View style={styles.activityDetails}>
           <HeaderBackground style={styles.gradientBackground} />
           <TouchableOpacity style={styles.activityInfo} onPress={() => handleActivityPress(selectedActivity)}>

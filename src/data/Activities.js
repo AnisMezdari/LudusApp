@@ -8,7 +8,11 @@ const activities = [
     package: '1',
     location: { latitude: 48.7639, longitude: 2.3755 },
     image: require('../../assets/images/Activity/guillipark-thiais.jpg'),
+    description : "Grâce à ses dix vidéoprojecteurs, le planétarium bénéficie d'un système de projection Laser Haute Définition en 8K. Le détail illimité du simulateur astronomique vous donnera une sensation de profondeur, d’immensité et rendra l’expérience impressionnante... Laissez-vous surprendre ! ",
+    address : "9 rue de la tuilerie Coutevroult",
     recommended: true,
+    distance : 6,
+    city : "Coutevroult"
   },
   {
     id: '2',
@@ -18,8 +22,12 @@ const activities = [
     favorite: true,
     package: '3',
     location: { latitude: 48.8566, longitude: 2.3522 },
+    description : "Grâce à ses dix vidéoprojecteurs, le planétarium bénéficie d'un système de projection Laser Haute Définition en 8K. Le détail illimité du simulateur astronomique vous donnera une sensation de profondeur, d’immensité et rendra l’expérience impressionnante... Laissez-vous surprendre ! ",
     image: require('../../assets/images/Activity/spa.jpg'),
+    address : "9 rue de la tuilerie Coutevroult",
     recommended: true,
+    distance : 34,
+    city : "Coutevroult"
   },
   {
     id: '3',
@@ -30,7 +38,10 @@ const activities = [
     package: '1',
     location: { latitude: 48.7200, longitude: 2.3000 },
     image: require('../../assets/images/Activity/funland.jpg'),
+    address : "9 rue de la tuilerie Coutevroult",
     recommended: false,
+    distance : 21,
+    city : "Coutevroult"
   },
   {
     id: '4',
@@ -41,7 +52,9 @@ const activities = [
     package: '2',
     location: { latitude: 48.9100, longitude: 2.2600 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
-    distance : 0.5,
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 11,
+    city : "Coutevroult"
   },
   {
     id: '5',
@@ -52,7 +65,9 @@ const activities = [
     package: '2',
     location: { latitude: 48.8700, longitude: 2.3200 },
     image: require('../../assets/images/Activity/LePetitZoo.jpg'),
-    distance : 0.1,
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 5,
+    city : "Coutevroult"
   },
   {
     id: '6',
@@ -63,7 +78,9 @@ const activities = [
     package: '3',
     location: { latitude: 48.8500, longitude: 2.3000 },
     image: require('../../assets/images/Activity/bubleSpa.jpg'),
-    distance : 1,
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 7,
+    city : "Coutevroult"
   },
   {
     id: '7',
@@ -74,6 +91,9 @@ const activities = [
     package: '1',
     location: { latitude: 48.9500, longitude: 2.2500 },
     image: require('../../assets/images/Activity/JungleGym.jpg'),
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 4,
+    city : "Coutevroult"
   },
   {
     id: '8',
@@ -87,7 +107,9 @@ const activities = [
     description : "Grâce à ses dix vidéoprojecteurs, le planétarium bénéficie d'un système de projection Laser Haute Définition en 8K. Le détail illimité du simulateur astronomique vous donnera une sensation de profondeur, d’immensité et rendra l’expérience impressionnante... Laissez-vous surprendre ! ",
     price : "15-20",
     date : "12 juillet 2025",
-    address : "30 Av. Corentin Carlou, 75019 Paris"
+    address : "30 Av. Corentin Carlou, 75019 Paris",
+    distance : 2,
+    city : "Coutevroult"
 
   },
   {
@@ -99,6 +121,9 @@ const activities = [
     package: '4',
     location: { latitude: 48.7800, longitude: 2.3700 },
     image: require('../../assets/images/Activity/ArtisticWorkshop.webp'),
+    address : "9 rue de la tuilerie Coutevroult",
+    city : "Coutevroult",
+    distance : 35,
   },
   {
     id: '10',
@@ -109,6 +134,9 @@ const activities = [
     package: '2',
     location: { latitude: 48.8900, longitude: 2.3500 },
     image: require('../../assets/images/Activity/LaCitedesEnfants.jpg'),
+    address : "9 rue de la tuilerie Coutevroult",
+    city : "Coutevroult",
+    distance : 30,
   },
   {
     id: '11',
@@ -119,6 +147,9 @@ const activities = [
     package: '1',
     location: { latitude: 48.7600, longitude: 2.4100 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 16,
+    city : "Coutevroult"
   },
   {
     id: '12',
@@ -129,6 +160,9 @@ const activities = [
     package: '3',
     location: { latitude: 48.8500, longitude: 2.3500 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 15,
+    city : "Coutevroult"
   },
   {
     id: '13',
@@ -139,6 +173,9 @@ const activities = [
     package: '1',
     location: { latitude: 48.8700, longitude: 2.2800 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 5,
+    city : "Coutevroult"
   },
   {
     id: '14',
@@ -149,6 +186,9 @@ const activities = [
     package: '2',
     location: { latitude: 48.9200, longitude: 2.3000 },
     image: require('../../assets/images/Activity/aquaparkkids.png'),
+    address : "9 rue de la tuilerie Coutevroult",
+    distance : 5,
+    city : "Coutevroult"
   },
  //  {
  //    id: '15',
